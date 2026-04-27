@@ -1,0 +1,62 @@
+version: 2
+
+sources:
+  - name: contoso_source
+    database: contosoretaildw-494513
+    schema: contoso_dbo
+    description: "Raw staging data from the Contoso Retail Data Warehouse"
+    
+    tables:
+      # --- Dimension Tables ---
+      - name: DimAccount
+        description: "General Ledger and account structure metadata"
+      - name: DimChannel
+        description: "Sales channel information (Online, Store, Reseller, etc.)"
+      - name: DimCurrency
+        description: "Currency lookup and ISO codes"
+      - name: DimCustomer
+        description: "Individual and corporate customer demographics"
+      - name: DimDate
+        description: "Standard enterprise calendar and time attributes"
+      - name: DimEmployee
+        description: "Staff and organizational hierarchy data"
+      - name: DimEntity
+        description: "Business entities and corporate structure"
+      - name: DimGeography
+        description: "Geographical locations, regions, and postal codes"
+      - name: DimMachine
+        description: "Technical hardware and machine assets"
+      - name: DimOutage
+        description: "Recorded system or machine downtime events"
+      - name: DimProduct
+        description: "Base product catalog data"
+      - name: DimProductCategory
+        description: "High-level product classification"
+      - name: DimProductSubcategory
+        description: "Detailed product sub-classification"
+      - name: DimPromotion
+        description: "Marketing campaigns and discount event data"
+      - name: DimSalesTerritory
+        description: "Sales regional and territory mapping"
+      - name: DimScenario
+        description: "Budgeting scenarios (Actual, Budget, Forecast)"
+      - name: DimStore
+        description: "Physical retail store locations and metadata"
+
+      # --- Fact Tables ---
+      - name: FactExchangeRate
+        description: "Daily or periodic currency conversion rates"
+      - name: FactITMachine
+        description: "IT performance and machine metrics"
+      - name: FactITSLA
+        description: "Service Level Agreement tracking for IT"
+      - name: FactInventory
+        description: "Stock levels and inventory snapshots"
+      - name: FactOnlineSales
+        description: "Transactional data for web-based sales"
+      - name: FactSales
+        description: "General retail sales transactions"
+      - name: FactSalesQuota
+        description: "Sales targets and performance quotas"
+      - name: FactStrategyPlan
+        description: "High-level strategic planning and financial goals"

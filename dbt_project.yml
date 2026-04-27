@@ -2,7 +2,7 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'my_new_project'
+name: 'ContosoRetailDW'
 version: '1.0.0'
 config-version: 2
 
@@ -36,7 +36,23 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
-  my_new_project:
-    # Applies to all files under models/example/
-    example:
+  ContosoRetailDW:
+    # 1. Staging: Preparing hashes and business keys
+    staging:
+      +schema: staging
+      +materialized: view
+
+    # 2. Raw Vault: Hubs, Links, and Satellites
+    raw_vault:
+      +schema: raw_vault
+      +materialized: incremental
+
+    # 3. Business Vault: PITs, Bridges, and calculated Satellites
+    business_vault:
+      +schema: business_vault
+      +materialized: view
+
+    # 4. Mart: The Star Schema (Dim and Fact) for the users
+    mart:
+      +schema: mart
       +materialized: table
