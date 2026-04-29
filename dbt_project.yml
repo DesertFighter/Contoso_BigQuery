@@ -24,6 +24,9 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+# Auditing /le Tracking
+on-run-end:
+  - "{{ log_run_results(results) }}"
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -61,3 +64,5 @@ models:
     mart:
       +schema: mart
       +materialized: table
+    
+   
