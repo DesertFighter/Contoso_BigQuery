@@ -51,8 +51,7 @@ hashing as (
         -- 7. Source System Audit Columns
         ETLLoadID as source_etl_load_id,
         LoadDate as source_load_date,
-        UpdateDate as source_update_date,
-        Updated_At as source_updated_at
+        UpdateDate as source_update_date
 
     from business_key_derivation
 )
