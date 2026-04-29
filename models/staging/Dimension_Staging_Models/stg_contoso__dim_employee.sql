@@ -1,5 +1,11 @@
+{{ config(unique_key='employee_bk') }} -- Only the unique key stays here
+
 with source_data as (
     select * from {{ source('contoso_source', 'DimEmployee') }}
+
+    {% if is_incremental() %}
+          where LoadDate > (select max(LoadDate) from {{ this }})
+    {% endif %}
 ),
 
 -- 1. Combine the natural attributes into a single Business Key column

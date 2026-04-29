@@ -16,8 +16,8 @@ sources:
         description: "Currency lookup and ISO codes"
       - name: DimCustomer
         description: "Individual and corporate customer demographics"
-      - name: DimDate
-        description: "Standard enterprise calendar and time attributes"
+      #-- name: DimDate
+       #-- description: "Standard enterprise calendar and time attributes"
       - name: DimEmployee
         description: "Staff and organizational hierarchy data"
       - name: DimEntity

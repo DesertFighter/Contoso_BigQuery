@@ -1,3 +1,5 @@
+{{ config( materialized='table',unique_key='date_hk')}}
+-- for above we Overrides incremental from YAML and Overrides partitioning since the column doesnt exist
 -- This macro generates a full date dimension with ~30 columns 
 -- (Year, Quarter, Month, Day Name, Is_Weekend, etc.)
 with date_dimension as (
@@ -39,8 +41,12 @@ final as (
         quarter_start_date,
         quarter_end_date,
         year_start_date,
-        year_end_date
+        year_end_date,
         -- (The package provides many more, you can select all or a few)
+        -- ✅ ADD THIS LINE AT THE BOTTOM
+        -- This satisfies the partition requirement in your dbt_project.yml
+        cast(current_datetime() as datetime) as source_load_date
+        
 
     from date_dimension
 )

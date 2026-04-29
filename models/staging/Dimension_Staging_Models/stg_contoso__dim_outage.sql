@@ -1,5 +1,11 @@
+{{ config(unique_key='outage_hk') }} -- Only the unique key stays here
+
 with source_data as (
     select * from {{ source('contoso_source', 'DimOutage') }}
+
+    {% if is_incremental() %}
+          where LoadDate > (select max(LoadDate) from {{ this }})
+    {% endif %}
 ),
 
 hashing as (

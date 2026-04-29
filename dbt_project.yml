@@ -40,7 +40,12 @@ models:
     # 1. Staging: Preparing hashes and business keys
     staging:
       +schema: staging
-      +materialized: view
+      +materialized: incremental
+      +incremental_strategy: insert_overwrite
+      +partition_by:
+          field: source_load_date # ⚠️ Every staging table must have this name!
+          data_type: datetime
+          granularity: day
 
     # 2. Raw Vault: Hubs, Links, and Satellites
     raw_vault:

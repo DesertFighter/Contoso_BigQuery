@@ -1,5 +1,12 @@
+{{ config(unique_key='it_machine_hk') }} -- Only the unique key stays here
+
 with source_fact as (
     select * from {{ source('contoso_source', 'FactITMachine') }}
+
+      {% if is_incremental() %}
+          -- This logic is still required to filter the incoming data
+          where LoadDate > (select max(source_load_date) from {{ this }})
+    {% endif %}
 ),
 
 -- Lookup to get the Business Key (Label)

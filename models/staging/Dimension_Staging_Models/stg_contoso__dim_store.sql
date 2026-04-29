@@ -1,5 +1,12 @@
+{{ config(unique_key='store_bk') }} -- Only the unique key stays here
+
+
 with source_data as (
     select * from {{ source('contoso_source', 'DimStore') }}
+
+    {% if is_incremental() %}
+          where LoadDate > (select max(LoadDate) from {{ this }})
+    {% endif %}
 ),
 
 -- 1. Manufacture a stable Business Key

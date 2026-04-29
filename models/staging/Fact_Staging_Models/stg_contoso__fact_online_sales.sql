@@ -1,5 +1,12 @@
+{{ config(unique_key='online_sales_hk') }} -- Only the unique key stays here
+
 with source_fact as (
     select * from {{ source('contoso_source', 'FactOnlineSales') }}
+
+      {% if is_incremental() %}
+          -- This logic is still required to filter the incoming data
+          where LoadDate > (select max(source_load_date) from {{ this }})
+    {% endif %}
 ),
 
 -- 1. Lookup DimStore for 'store_bk' (Name + Zip logic)

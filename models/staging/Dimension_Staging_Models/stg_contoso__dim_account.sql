@@ -1,5 +1,10 @@
+{{ config(unique_key='account_hk') }} -- Only the unique key stays here
 with source_data as (
     select * from {{ source('contoso_source', 'DimAccount') }}
+
+    {% if is_incremental() %}
+          where LoadDate > (select max(LoadDate) from {{ this }})
+    {% endif %}
 ),
 
 hashing as (
@@ -20,7 +25,6 @@ hashing as (
         -- (To detect changes for Satellite)
         {{ dbt_utils.generate_surrogate_key([
             'ParentAccountKey',
-            'AccountLabel',
             'AccountName',
             'AccountDescription',
             'AccountType',
@@ -43,7 +47,7 @@ hashing as (
 
         -- 6. Source System Audit Columns (Keep them for traceability, but use your macros for the Vault)
         ETLLoadID as source_etl_load_id,
-        LoadDate as source_load_date,
+        LoadDate as source_load_date, -- ✅ This name must match the config field above
         UpdateDate as source_update_date
 
     from source_data

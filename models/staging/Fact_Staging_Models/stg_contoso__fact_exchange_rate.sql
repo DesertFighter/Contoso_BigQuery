@@ -1,10 +1,18 @@
+{{ config(unique_key='exchange_rate_hk') }} -- Only the unique key stays here
+
 with source_fact as (
     select * from {{ source('contoso_source', 'FactExchangeRate') }}
+
+    {% if is_incremental() %}
+          -- This logic is still required to filter the incoming data
+          where LoadDate > (select max(source_load_date) from {{ this }})
+    {% endif %}
 ),
 
 -- Lookup to get the Business Key (Label)
 source_currency as (
     select CurrencyKey, CurrencyLabel from {{ source('contoso_source', 'DimCurrency') }}
+
 ),
 
 joined_data as (
