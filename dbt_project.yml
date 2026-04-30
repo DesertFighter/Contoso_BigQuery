@@ -59,9 +59,7 @@ models:
           data_type: datetime
           granularity: day
     
-    vault_staging:
-      +schema: vault_stage
-      +materialized: view  # <--- This prevents the _PARTITIONTIME error!
+  
 
     # Raw Vault: Hubs, Links, and Satellites
     raw_vault:
