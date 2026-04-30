@@ -1,0 +1,510 @@
+version: 2
+
+models:
+  # ==========================================
+  # MASTER DATA STAGING (HUB ENTITIES)
+  # ==========================================
+
+  - name: stg_contoso__dim_account
+    description: "Table 1 - Staging model for Account master data with DV 2.0 hashing."
+    columns:
+      - name: AccountLabel
+        description: "The unique natural business key for the account."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: account_hk
+        description: "Primary Hash Key for the Account Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: account_hashdiff
+        description: "Hash used to detect descriptive changes in the Account Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+      - name: load_datetime
+        description: "Timestamp representing when the record entered the ecosystem."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_channel
+    description: "Table 2 - Staging model for Channel master data."
+    columns:
+      - name: ChannelLabel
+        description: "The natural business key for the channel."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: channel_hk
+        description: "Primary Hash Key for the Channel Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: channel_hashdiff
+        description: "Hash used to detect changes in the Channel Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_currency
+    description: "Table 3 - Staging model for Currency master data."
+    columns:
+      - name: CurrencyLabel
+        description: "The natural business key for the currency."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: currency_hk
+        description: "Primary Hash Key for the Currency Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: currency_hashdiff
+        description: "Hash used to detect changes in the Currency Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_customer
+    description: "Table 4 - Staging model for Customer master data."
+    columns:
+      - name: CustomerLabel
+        description: "The natural business key for the customer."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: customer_hk
+        description: "Primary Hash Key for the Customer Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: customer_hashdiff
+        description: "Hash used to detect changes in the Customer Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_employee
+    description: "Table 5 - Staging model for Employee master data."
+    columns:
+      - name: employee_bk
+        description: "The natural business key for the employee."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: employee_hk
+        description: "Primary Hash Key for the Employee Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: employee_hashdiff
+        description: "Hash used to detect changes in the Employee Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_entity
+    description: "Table 6 - Staging model for Entity master data."
+    columns:
+      - name: EntityLabel
+        description: "The natural business key for the entity."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: entity_hk
+        description: "Primary Hash Key for the Entity Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: entity_hashdiff
+        description: "Hash used to detect changes in the Entity Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_geography
+    description: "Table 7 - Staging model for Geography master data."
+    columns:
+      - name: geography_bk
+        description: "The natural business key for geography."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: geography_hk
+        description: "Primary Hash Key for the Geography Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: geography_hashdiff
+        description: "Hash used to detect changes in the Geography Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_machine
+    description: "Table 8 - Staging model for Machine master data."
+    columns:
+      - name: MachineLabel
+        description: "The natural business key for the machine."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: machine_hk
+        description: "Primary Hash Key for the Machine Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: machine_hashdiff
+        description: "Hash used to detect changes in the Machine Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_outage
+    description: "Table 9 - Staging model for Outage master data."
+    columns:
+      - name: OutageLabel
+        description: "The natural business key for the outage."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: outage_hk
+        description: "Primary Hash Key for the Outage Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: outage_hashdiff
+        description: "Hash used to detect changes in the Outage Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_product_category
+    description: "Table 10 - Staging model for Product Category master data."
+    columns:
+      - name: ProductCategoryLabel
+        description: "The natural business key for product categories."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: product_category_hk
+        description: "Primary Hash Key for the Product Category Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: product_category_hashdiff
+        description: "Hash used to detect changes in the Product Category Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_product_subcategory
+    description: "Table 11 - Staging model for Product Subcategory master data."
+    columns:
+      - name: ProductSubcategoryLabel
+        description: "The natural business key for product subcategories."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: product_subcategory_hk
+        description: "Primary Hash Key for the Product Subcategory Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: product_subcategory_hashdiff
+        description: "Hash used to detect changes in the Product Subcategory Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_product
+    description: "Table 12 - Staging model for Product master data."
+    columns:
+      - name: ProductLabel
+        description: "The natural business key for the product."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: product_hk
+        description: "Primary Hash Key for the Product Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: product_hashdiff
+        description: "Hash used to detect changes in the Product Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_promotion
+    description: "Table 13 - Staging model for Promotion master data."
+    columns:
+      - name: PromotionLabel
+        description: "The natural business key for the promotion."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: promotion_hk
+        description: "Primary Hash Key for the Promotion Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: promotion_hashdiff
+        description: "Hash used to detect changes in the Promotion Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_sales_territory
+    description: "Table 14 - Staging model for Sales Territory master data."
+    columns:
+      - name: SalesTerritoryLabel
+        description: "The natural business key for sales territories."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: sales_territory_hk
+        description: "Primary Hash Key for the Sales Territory Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: sales_territory_hashdiff
+        description: "Hash used to detect changes in the Sales Territory Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_scenario
+    description: "Table 15 - Staging model for Scenario master data."
+    columns:
+      - name: ScenarioLabel
+        description: "The natural business key for the scenario."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: scenario_hk
+        description: "Primary Hash Key for the Scenario Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: scenario_hashdiff
+        description: "Hash used to detect changes in the Scenario Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_store
+    description: "Table 16 - Staging model for Store master data."
+    columns:
+      - name: store_bk
+        description: "The natural business key for the store."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: store_hk
+        description: "Primary Hash Key for the Store Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: store_hashdiff
+        description: "Hash used to detect changes in the Store Satellite."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__dim_date
+    description: "Table 17 - Staging model for the Date dimension. Parent for all Link tables."
+    columns:
+      - name: date_day
+        description: "The natural business key (the actual date)."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: date_hk
+        description: "Primary Hash Key for the Date Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+
+  # ==========================================
+  # TRANSACTION STAGING (LINK ENTITIES)
+  # ==========================================
+
+  - name: stg_contoso__fact_exchange_rate
+    description: "Table 18 - Staging model for Exchange Rate facts. Grain: Currency + Date."
+    columns:
+      - name: exchange_rate_hk
+        description: "Link Hash Key representing the daily exchange rate record."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: currency_hk
+        description: "Referential Integrity link to Currency Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_currency')
+                field: currency_hk
+              config: {severity: warn}
+      - name: date_hk
+        description: "Referential Integrity link to Date Hub."
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_date')
+                field: date_hk
+              config: {severity: warn}
+      - name: AverageRate
+        description: "Fact Measure: Average exchange rate for the day."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__fact_inventory
+    description: "Table 19 - Staging model for Inventory facts. Grain: Product + Store + Date."
+    columns:
+      - name: inventory_hk
+        description: "Link Hash Key for Inventory records."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: product_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_product')
+                field: product_hk
+              config: {severity: warn}
+      - name: store_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_store')
+                field: store_hk
+              config: {severity: warn}
+      - name: OnHandQuantity
+        description: "Fact Measure: Current stock quantity."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__fact_it_machine
+    description: "Table 20 - Staging model for IT Machine facts. Grain: Machine + Date + Cost Type."
+    columns:
+      - name: it_machine_hk
+        description: "Link Hash Key for IT Machine operational records."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: machine_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_machine')
+                field: machine_hk
+              config: {severity: warn}
+      - name: CostAmount
+        description: "Fact Measure: Recorded cost amount."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__fact_itsla
+    description: "Table 21 - Staging model for IT SLA facts. Grain: Date + Store + Machine + Outage."
+    columns:
+      - name: itsla_hk
+        description: "Link Hash Key for SLA performance records."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: outage_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_outage')
+                field: outage_hk
+              config: {severity: warn}
+      - name: DownTime
+        description: "Fact Measure: Total outage duration."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__fact_online_sales
+    description: "Table 22 - Staging for Online Sales facts. Primary Link connecting 6 Hubs."
+    columns:
+      - name: online_sales_hk
+        description: "Link Hash Key representing a unique sales transaction grain."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: customer_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_customer')
+                field: customer_hk
+              config: {severity: warn}
+      - name: product_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_product')
+                field: product_hk
+              config: {severity: warn}
+      - name: SalesAmount
+        description: "Fact Measure: Total monetary value of sale."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__fact_sales_quota
+    description: "Table 23 - Staging model for Sales Quota facts. Grain: Date + Channel + Store + Product + Currency + Scenario."
+    columns:
+      - name: sales_quota_hk
+        description: "Link Hash Key for sales quota projections."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: channel_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_channel')
+                field: channel_hk
+              config: {severity: warn}
+      - name: SalesAmountQuota
+        description: "Fact Measure: Targeted sales amount quota."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__fact_sales
+    description: "Table 24 - Staging model for Store Sales facts. Grain: Date + Channel + Store + Product + Promotion + Currency."
+    columns:
+      - name: sales_hk
+        description: "Link Hash Key for physical store sales records."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: promotion_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_promotion')
+                field: promotion_hk
+              config: {severity: warn}
+      - name: SalesQuantity
+        description: "Fact Measure: Units sold in transaction."
+        tests:
+          - not_null: {config: {severity: warn}}
+
+  - name: stg_contoso__fact_strategy_plan
+    description: "Table 25 - Staging model for Strategy Plan facts. Grain: Date + Entity + Scenario + Account + Currency + Product Category."
+    columns:
+      - name: strategy_plan_hk
+        description: "Link Hash Key for strategic planning records."
+        tests:
+          - not_null: {config: {severity: error}}
+          - unique: {config: {severity: error}}
+      - name: entity_hk
+        tests:
+          - not_null: {config: {severity: error}}
+          - relationships:
+              arguments:
+                to: ref('stg_contoso__dim_entity')
+                field: entity_hk
+              config: {severity: warn}
+      - name: Amount
+        description: "Fact Measure: Planned financial amount."
+        tests:
+          - not_null: {config: {severity: warn}}

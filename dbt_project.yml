@@ -24,9 +24,11 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
-# Auditing /le Tracking
+# 5. Tracking (ZERO spaces at the start of the next line!)
+# 5. Tracking (Updated to include Elementary Audit Upload)
 on-run-end:
-  - "{{ log_run_results(results) }}"
+  - "{{ log_run_results(results) }}" #Added project name prefix
+  #- "{{ elementary.upload_results() }}" # <--- This records your test status/time/severity
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -38,31 +40,36 @@ on-run-end:
 # continue to be built as views. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 
+# Configuring models
 models:
+  # --- 1. ELEMENTARY CONFIGURATION ---
+  # This tells dbt to put audit tables in a specific 'elementary' schema in BigQuery
+  elementary:
+    +schema: elementary
+
+  # --- 2. YOUR PROJECT CONFIGURATION ---
   ContosoRetailDW:
-    # 1. Staging: Preparing hashes and business keys
+    # Staging: Preparing hashes and business keys
     staging:
       +schema: staging
       +materialized: incremental
       +incremental_strategy: insert_overwrite
       +partition_by:
-          field: source_load_date # ⚠️ Every staging table must have this name!
+          field: source_load_date 
           data_type: datetime
           granularity: day
 
-    # 2. Raw Vault: Hubs, Links, and Satellites
+    # Raw Vault: Hubs, Links, and Satellites
     raw_vault:
       +schema: raw_vault
       +materialized: incremental
 
-    # 3. Business Vault: PITs, Bridges, and calculated Satellites
+    # Business Vault: PITs, Bridges, and calculated Satellites
     business_vault:
       +schema: business_vault
       +materialized: view
 
-    # 4. Mart: The Star Schema (Dim and Fact) for the users
+    # Mart: The Star Schema (Dim and Fact) for the users
     mart:
       +schema: mart
       +materialized: table
-    
-   
