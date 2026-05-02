@@ -1,28 +1,52 @@
-{{ config(unique_key='sales_territory_hk') }} -- Only the unique key stays here
-
+{{ config(unique_key='sales_territory_hk') }}
 
 with source_data as (
     select * from {{ source('contoso_source', 'DimSalesTerritory') }}
+),
 
+-- We join with Geography source to get the components for the Geography Business Key
+geography_source as (
+    select * from {{ source('contoso_source', 'DimGeography') }}
+),
+
+joined_data as (
+    select
+        st.*,
+        -- Manufacture the SAME geography_bk as used in the Geography staging model
+        concat(
+            upper(trim({{ check_null_to_string('geo.GeographyType') }})), '-', 
+            upper(trim({{ check_null_to_string('geo.ContinentName') }})), '-', 
+            upper(trim({{ check_null_to_string('geo.CityName') }})), '-', 
+            upper(trim({{ check_null_to_string('geo.StateProvinceName') }})), '-', 
+            upper(trim({{ check_null_to_string('geo.RegionCountryName') }}))
+        ) as geography_bk
+    from source_data st
+    left join geography_source geo on st.GeographyKey = geo.GeographyKey
+    
     {% if is_incremental() %}
-          where LoadDate > (select max(LoadDate) from {{ this }})
+    where st.LoadDate > (select max(source_load_date) from {{ this }})
     {% endif %}
 ),
 
 hashing as (
     select
-        -- 1. Metadata Macros
+        -- 1. Metadata
         {{ get_load_datetime() }} as load_datetime,
         {{ get_ingestion_user() }} as ingestion_user,
+        'CONTOSO_ERP' as record_source,
 
-        -- 2. THE BUSINESS KEY (Natural Key)
+        -- 2. Business Keys
         SalesTerritoryLabel,
+        geography_bk,
 
-        -- 3. Hash Key (Primary Key for Hub Sales Territory)
+        -- 3. Hash Keys
         {{ dbt_utils.generate_surrogate_key(['SalesTerritoryLabel']) }} as sales_territory_hk,
+        {{ dbt_utils.generate_surrogate_key(['geography_bk']) }} as geography_hk,
 
-        -- 4. Hash Diff (To detect changes for Satellite)
-        -- We include descriptive fields and foreign keys that define the territory's state
+        -- MISSING KEY ADDED HERE: This uniquely identifies the relationship
+        {{ dbt_utils.generate_surrogate_key(['SalesTerritoryLabel', 'geography_bk']) }} as link_sales_territory_geography_hk,
+
+        -- 4. Hash Diff
         {{ dbt_utils.generate_surrogate_key([
             'SalesTerritoryLabel',
             'SalesTerritoryName',
@@ -31,31 +55,28 @@ hashing as (
             'SalesTerritoryGroup',
             'SalesTerritoryLevel',
             'SalesTerritoryManager',
-            'GeographyKey',
-            'StartDate',
-            'EndDate',
+            'geography_bk', 
             'Status'
         ]) }} as sales_territory_hashdiff,
 
         -- 5. Attributes
-        SalesTerritoryKey,     -- Technical ID
-        GeographyKey,          -- FK to Geography (potential Link)
+        SalesTerritoryKey,
         SalesTerritoryName,
         SalesTerritoryRegion,
         SalesTerritoryCountry,
         SalesTerritoryGroup,
         SalesTerritoryLevel,
-        SalesTerritoryManager, -- FK to Employee (potential Link)
+        SalesTerritoryManager,
         StartDate,
         EndDate,
         Status,
 
-        -- 6. Source System Audit Columns
+        -- 6. Audit
         ETLLoadID as source_etl_load_id,
         LoadDate as source_load_date,
         UpdateDate as source_update_date
 
-    from source_data
+    from joined_data
 )
 
 select * from hashing

@@ -26,6 +26,7 @@ hashing as (
         -- 2. Metadata Macros
         {{ get_load_datetime() }} as load_datetime,
         {{ get_ingestion_user() }} as ingestion_user,
+        'CONTOSO_ERP' as record_source, -- Add this line!
 
         -- 3. THE BUSINESS KEY (Generated)
         store_bk,

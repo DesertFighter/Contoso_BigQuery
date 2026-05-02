@@ -11,6 +11,7 @@ final as (
         -- 1. Metadata Macros (Keeping your design consistent!)
         {{ get_load_datetime() }} as load_datetime,
         {{ get_ingestion_user() }} as ingestion_user,
+        'CONTOSO_ERP' as record_source, -- Add this line!
 
         -- 2. Business Key
         date_day, 
