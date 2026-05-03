@@ -1,3 +1,3 @@
-{% macro get_load_datetime() -%}
-    current_timestamp()
-{%- endmacro %}
+{% macro get_load_datetime() %}
+    CURRENT_DATETIME()
+{% endmacro %}

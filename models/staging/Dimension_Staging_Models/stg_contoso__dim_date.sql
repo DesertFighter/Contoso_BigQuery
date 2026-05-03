@@ -14,7 +14,8 @@ final as (
 
         -- 2. Business Key & PIT Spine
         date_day, 
-        date_day as AS_OF_DATE, -- 👈 This is the "fix" automate_dv needs!
+       CAST(date_day AS DATETIME) as AS_OF_DATE,
+        
 
         -- 3. Hash Key
         {{ dbt_utils.generate_surrogate_key(['date_day']) }} as date_hk,
@@ -39,7 +40,7 @@ final as (
         year_end_date,
 
         -- 5. Partition Support
-        cast(current_datetime() as datetime) as source_load_date
+        CURRENT_DATETIME() as source_load_date
 
     from date_dimension
 )
