@@ -13,9 +13,13 @@
 WITH as_of AS (
     SELECT DISTINCT AS_OF_DATE 
     FROM {{ ref('stg_contoso__dim_date') }}
+    
+    {# Filter for snapshots up to today only #}
+    WHERE AS_OF_DATE <= CURRENT_DATETIME()
+
     {% if is_incremental() %}
-    -- Only pull dates that don't exist in the bridge yet
-    WHERE AS_OF_DATE > (SELECT MAX(AS_OF_DATE) FROM {{ this }})
+    -- We use {{ this }} here to prevent the Circular Dependency error
+    AND AS_OF_DATE > (SELECT MAX(AS_OF_DATE) FROM {{ this }})
     {% endif %}
 ),
 
@@ -35,13 +39,9 @@ final AS (
         l.currency_hk,
         l.promotion_hk,
         
-        {# Verified column names from your BigQuery Schema #}
-        p_prod.SAT_PRODUCT_DETAILS_LDTS,
+        {# Pointers from your PIT tables #}
         p_prod.SAT_PRODUCT_REFINED_LDTS,
-        
-        p_store.SAT_STORE_DETAILS_LDTS,
         p_store.SAT_STORE_REFINED_LDTS,
-        
         p_chan.SAT_CHANNEL_DETAILS_LDTS,
         p_curr.SAT_CURRENCY_DETAILS_LDTS,
         p_prom.SAT_PROMOTION_DETAILS_LDTS
